@@ -1,0 +1,28 @@
+.menu{
+	display:flex;
+}
+.menu-item{
+	width:25%;
+	transition: 0.2s;
+	background:gold;
+/* flex-grow 로 해도 좋지만, ie가 그지같아서 잘 안먹힘. 그래서 width 처리하는것이 좋을수도.*/
+}
+
+.menu-item:hover{
+	width:35%;
+	background:crimson;
+}
+
+.menu-link{
+
+	display:block;
+	padding:1em;
+	font-size:1.2rem;
+	color:#555;
+	text-decoration:none;
+	text-align:center;
+}
+
+.menu-link:hover{
+	color:white;
+}
