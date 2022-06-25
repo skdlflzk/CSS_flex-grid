@@ -146,3 +146,150 @@ align? 수직축 방향으로 길쭉 오뎅 방향 정렬
 |`space-between`| |[[내] _ _ _ [용] _ _ _[물]]|
 |`space-around`|	|[ _ [내] _ _ [용] _ _ [물] _ ]|
 |~~`space-evenly`~~|(ie, edge지원 안함!)|[ _ [내] _ [용] _ [물] _ ]|
+
+
+
+ - 오뎅 하나의 모양은 어떻게 되어있냐?
+ 
+ **align-items:xxx;**
+ 
+| 값 | 설명 |
+|:---|---|
+|`stretch(기본)`|float과의 차이. 컨테이너에 맞춰서 늘림|
+|`flex-start`|늘리지않고 내용물 크기만큼 상단(첫아이템 위치) 에 정렬|
+|`flex-end`|늘리지 않고 하단(마지막 아이템 위치) 정렬|
+|`flex-center`|늘리지않고 중앙정렬|
+|`flex-baseline`|Text 하단에 맞춤 (잘 안쓰인다.)|
+
+ - 여러행 정렬?
+
+***align-content:xxx;***
+
+아래 2개 오뎅판이 있다.  
+1.  첫번째 판  
+
+ㅡㅡㅡㅡㅡㅡㅡㅡㅡ  
+ㅡ|ㅡ|ㅡ|[ㅡㅡ  _ _ _ _  ]|  == 오뎅 꼬치 with nowrap  
+  
+  
+ㅡㅡㅡㅡㅡㅡㅡㅡㅡ  
+  
+2. 두번째 판  
+
+ㅡㅡㅡㅡㅡㅡㅡㅡㅡ  
+  
+ㅡ|ㅡ|ㅡㅡㅡㅡ  
+|[ㅡㅡㅡ]|ㅡㅡ  == 오뎅 꼬치 with wrap  
+  
+ㅡㅡㅡㅡㅡㅡㅡㅡㅡ  
+
+
+> 여러 행이라는 것은, 꼬치길이보다 오뎅이 큰 경우
+> 다른 꼬치로 이동한 상황을 말하는 것.
+> 즉, flex-wrap:nowrap인 기본 세팅에서는 적용이 되지 않는다.
+>  flex-wrap:wrap으로 설정되어 부모 컨테이너보다 items 총합 크기가 더 커서 아래로 내려간 경우의 정렬 방식을 정의하는  속성
+
+| 값 | 설명 | 예|
+|:---|---|---|
+|`stretch(기본)`|align-items가 stretch인 경우 오뎅판에 오뎅을 쭉 늘려서 채워놓음| |
+|`flex-start`|align-items가 flext-xxx으로 내용물을 맞춘경우 오뎅판의 상단(첫아이템위치)에 정렬|위 첫번째 오뎅판의 경우|
+|`flex-end`|늘리지 않고 하단(마지막 아이템 위치) 정렬| |
+|`space-between`| | | 
+|`space-around`| | |
+
+--- 
+
+###정리해보면 **플렉스 박스 배치 방법 4가지***
+
+1. flex-direction: row-reverse;
+2. justify-content: flex-start;
+3. align-items:	flex-baseline;
+4. align-content: space-between; (flex-wrap:wrap; 조건 필수)
+
+
+---
+
+## flex 아이템에 적용하는 속성
+
+ - 아이템의 기본 크기?
+
+**flex-basis**
+
+아이템이 가지는 기본 크기. != width, height 의미가 다르다.  
+flex-direction:row 라면 가로의 너비가 되고 flex-column이면 세로 높이가 되는 것.  
+
+```css
+flex-basis:auto; /*기본은 auto - 너비에 맞춤*/
+flex-basis:100px;  
+```
+
+  
+ - 유연하게 늘리기?
+
+**flex-grow**
+
+```css
+flex-grow:0; /*기본 0 ~ N*/ 
+```
+숫자의 의미?  
+아이템들의 flex-basis를 제외한 여백 부분을 flex-grow에 지정된 숫자의 비율로 나눈다  
+```css
+{flex-grow:1;}
+```
+이면 1 / 1이므로 꽉채우기
+
+
+```css
+.flex-item:nth-child(1){
+	flex-grow:1;
+}
+.flex-item:nth-child(2){
+	flex-grow:2;
+}
+.flex-item:nth-child(1){
+	flex-grow:1;
+}
+```
+이면 1/4 , 2/4, 1/4로  
+
+[[내123456 _ ] [용 _  _ ] [물 _ ]] <= 여백이 1:2:1 이라는 것.
+
+ - 유연하게 줄이기?
+
+**flex-shrink**
+
+flex-grow와 세트.  
+기본 flex-shrink : 1;
+
+ex) 화면이 이동하는데 특정 아이템이 줄어드는것을 원하지 않을때
+```css
+.flex-item:nth-child(1){flex-shrink:0;width:100px}
+.flex-item:nth-child(2){flex-grow:1;}
+```
+
+[쉬링크0 _ _ _][그로우1 _ _ _ _ _ _ _ _ _ _ _ _ _]  
+화면이 반으로 축소되면?  
+[쉬링크0 _ _ _][그로우1 _ _ _ ]  
+
+
+- flex-grow, flex-shrink, flex-basis 위 속성을 한번에?
+
+**flex: n n x;**
+
+flex : [flex-grow] + [flex-shrink] + [flex-basis];
+
+```css
+flex:1;
+/* flex-grow:1;flex-shrink:1;flex-basis:0%*/ 
+```
+혹은
+```css
+flex: 1 1 auto;
+flex: 1 500px;  /* flex-shrink는 없어도 flex-basis 가 500px임을 의미*/
+```
+
+flex는 아이템 크기가 커져도 강제로 맞추지는 않는다.  
+-> 이런 경우에는 그냥 width:20% 등으로 맞출것.
+
+> flex 아이템에 width만 쓴다는것? 유연함/유동성을 포기하는것이다.
+
